@@ -1,0 +1,528 @@
+{% load static %} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% comment %} <link rel="stylesheet" href="{% static 'css/slider.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header-style.css' %}">
+
+</head>
+<body>
+
+                              <!-- navbar -->
+    {% include 'navbar.html' %}
+
+
+
+<section class="hotstar-slider-wrapper">
+    {% if movie_sliders %}
+        <div class="hotstar-slider-track" id="heroTrack">
+            {% for slider in movie_sliders %}
+            <div class="hotstar-slide" data-index="{{ forloop.counter0 }}" data-url="{% if slider.movie %}{% url 'movie' slider.movie.movie_id %}{% endif %}">
+                <!-- Blurred background to fill empty space for portrait posters cleanly -->
+                <img src="{{ slider.slider_image.url }}" style="position: absolute; width:100%; height:100%; object-fit:cover; filter:blur(25px); opacity:0.6; z-index:-1;">
+                <img src="{{ slider.slider_image.url }}" alt="{{ slider.title }}" class="main-img">
+                
+                <div class="slide-overlay"></div>
+                
+                <div class="slide-content">
+                    <div style="margin-bottom: 12px;">
+                        <span class="featured-badge" style="position: static;">FEATURED</span>
+                    </div>
+                    
+                    <h1>{{ slider.title }}</h1>
+                    
+                    {% if slider.description %}
+                    <p>{{ slider.description }}</p>
+                    {% endif %}
+                    
+                    {% if slider.movie %}
+                    <a href="{% url 'movie' slider.movie.movie_id %}#player" class="play-btn-circle" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button class="slider-nav prev" id="heroPrev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-nav next" id="heroNext"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const track = document.getElementById('heroTrack');
+                const slides = document.querySelectorAll('.hotstar-slide');
+                const prevBtn = document.getElementById('heroPrev');
+                const nextBtn = document.getElementById('heroNext');
+                
+                if (slides.length > 0) {
+                    let currentIndex = 0;
+                    let autoPlayTimer;
+
+                    function updateSlider() {
+                        slides.forEach((slide, index) => {
+                            slide.classList.remove('active');
+                            let diff = index - currentIndex;
+                            if (diff < -1) diff += slides.length;
+                            if (diff > slides.length - 2) diff -= slides.length;
+                            
+                            const isMobile = window.innerWidth <= 768;
+                            const leftPad = isMobile ? 4 : 17.5; 
+                            const activeWidth = isMobile ? 92 : 65;
+                            const overlap = isMobile ? 8 : 20;
+                            
+                            slide.style.transformOrigin = 'left center';
+                            
+                            if (diff === 0) {
+                                slide.classList.add('active');
+                                slide.style.transform = `translate(${leftPad}vw, -50%) scale(1)`;
+                                slide.style.zIndex = 10;
+                                slide.style.opacity = 1;
+                            } else if (diff === 1) {
+                                slide.style.transform = `translate(${leftPad + activeWidth - overlap}vw, -50%) scale(0.9)`;
+                                slide.style.zIndex = 9;
+                                slide.style.opacity = 0.8;
+                            } else if (diff === -1) {
+                                slide.style.transform = `translate(-${activeWidth}vw, -50%) scale(0.9)`;
+                                slide.style.zIndex = 9;
+                                slide.style.opacity = 0;
+                            } else {
+                                slide.style.transform = `translate(100vw, -50%) scale(0.5)`;
+                                slide.style.zIndex = 1;
+                                slide.style.opacity = 0;
+                            }
+                        });
+                    }
+
+                    function nextSlide() { currentIndex = (currentIndex + 1) % slides.length; updateSlider(); resetTimer(); }
+                    function prevSlide() { currentIndex = (currentIndex - 1 + slides.length) % slides.length; updateSlider(); resetTimer(); }
+                    function resetTimer() { clearInterval(autoPlayTimer); autoPlayTimer = setInterval(nextSlide, 6000); }
+
+                    nextBtn.addEventListener('click', nextSlide);
+                    prevBtn.addEventListener('click', prevSlide);
+                    
+                    slides.forEach((slide, index) => {
+                        slide.addEventListener('click', () => {
+                            if (currentIndex !== index) {
+                                currentIndex = index;
+                                updateSlider();
+                                resetTimer();
+                            } else {
+                                const url = slide.getAttribute('data-url');
+                                if (url && url !== "") {
+                                    window.location.href = url;
+                                }
+                            }
+                        });
+                    });
+
+                    updateSlider();
+                    resetTimer();
+                    
+                    window.addEventListener('resize', () => {
+                        slides.forEach(slide => slide.style.transition = 'none');
+                        updateSlider();
+                        setTimeout(() => { slides.forEach(slide => slide.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.4, 1)'); }, 50);
+                    });
+                }
+            });
+        </script>
+    {% else %}
+        <div class="image-container" style="width: 100%; height: 85vh; position: relative;">
+            <img src="{% static 'images/slider/image_search_1739974167687.webp'%}" alt="Loading Image" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="image-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(90deg, rgba(8,10,26,0.9) 0%, rgba(8,10,26,0.5) 50%, rgba(8,10,26,0) 100%);"></div>
+            <div class="content" style="position: absolute; top: 40%; left: 8%; color: white;">
+                <div class="title-movie"><h1 class="hero-welcome-title">Welcome to Amanix</h1></div>
+                <div class="movie-details" class="hero-welcome-desc"><p>Stream your favorite movies and shows anytime, anywhere. Please log in to view the latest movies and updates.</p></div>
+                <br>
+                {% if not is_login %}
+                <div class="hero-actions" style="margin-top: 2rem;">
+                    <a href="{% url 'login' %}" class="btn-primary" style="text-decoration: none; display: inline-block;">
+                        <i class="fa-solid fa-user"></i> Login to start watching
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% if recommendations %}
+<section class="section-trending fade-in-up">
+    <span class="span" style="color:white;">AI Recommended For You</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            {% for movie in recommendations %}
+            <div class="t-item" onclick="window.location.href='{% url 'movie' movie.movie_id %}'" style="cursor: pointer;">
+                <div class="t-item-image-wrapper">
+                    <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                    <span class="featured-badge" style="background: linear-gradient(135deg, #6e8efb, #a777e3);">AI Pick</span>
+                </div>
+                <div class="info">
+                    <div class="title">{{ movie.movie_name }}</div>
+                    <div class="year">{{ movie.movie_release_date.year }} • {{ movie.movie_duration }}</div>
+                    
+                    <a href="{% url 'movie' movie.movie_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;"><i class="fa-solid fa-play"></i></a> 
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+
+<!-- Category-wise Movies Section -->
+{% for category in categories %}
+    {% if category.movies.all %}
+    <section class="section-trending fade-in-up">
+        <div class="webseries-header">
+            <h2>🎬 {{ category.cat_name }} Movies</h2>
+            <a href="{% url 'movies_list' %}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">View All <i class="fa-solid fa-chevron-right"></i></a>
+        </div>
+        <div class="row-container">
+            <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="trending">
+                {% for movie in category.movies.all %}
+                <div class="t-item" onclick="window.location.href='{% url 'movie' movie.movie_id %}'" style="cursor: pointer;">
+                    <div class="t-item-image-wrapper">
+                        <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                        <span class="featured-badge">{{ category.cat_name }}</span>
+                    </div>
+                    <div class="info">
+                        <div class="title">{{ movie.movie_name }}</div>
+                        <div class="year">{{ movie.movie_release_date.year }} • {{ movie.movie_duration }}</div>
+                        
+                        <a href="{% url 'movie' movie.movie_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;"><i class="fa-solid fa-play"></i></a> 
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </section>
+    {% endif %}
+{% endfor %}
+
+<div id="webseries" style="scroll-margin-top: 80px;"></div>
+
+<!-- Trending Webseries Section -->
+{% if trending_webseries %}
+<section class="webseries-section fade-in-up">
+    <div class="webseries-header">
+        <h2>🔥 Trending Web Series</h2>
+        <a href="{% url 'webseries_list' %}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">View All <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            {% for ws in trending_webseries %}
+            <div class="webseries-card" onclick="window.location.href='{% url 'webseries_detail' ws.webseries_id %}'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge">Trending #{{ forloop.counter }}</span>
+                    <img src="{{ ws.poster.url }}" alt="{{ ws.title }}">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">{{ ws.title }}</h3>
+                    <div class="webseries-meta">
+                        <span>{{ ws.year }}</span>
+                        <span>•</span>
+                        <span>{{ ws.episode_count }} Episodes</span>
+                    </div>
+                    <!-- Floating Play Button -->
+                    <a href="{% url 'webseries_detail' ws.webseries_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Webseries Section -->
+{% if featured_webseries %}
+<section class="webseries-section fade-in-up" style="background: linear-gradient(180deg, #0a0606 0%, #1a0808 50%, #0a0606 100%); padding: 60px 4rem;">
+    <div class="webseries-header">
+        <h2>✨ Featured Picks</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            {% for ws in featured_webseries %}
+            <div class="webseries-card" onclick="window.location.href='{% url 'webseries_detail' ws.webseries_id %}'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge" style="background: #ffd700; color: #000;">Award Winning</span>
+                    <img src="{{ ws.poster.url }}" alt="{{ ws.title }}">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">{{ ws.title }}</h3>
+                    <div class="webseries-meta">
+                        <span>{{ ws.year }}</span>
+                        <span>•</span>
+                        <span>{{ ws.language.language_name }}</span>
+                    </div>
+                    <a href="{% url 'webseries_detail' ws.webseries_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- Latest Webseries Section -->
+{% if latest_webseries %}
+<section class="webseries-section fade-in-up">
+    <div class="webseries-header">
+        <h2>🆕 Recently Added</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            {% for ws in latest_webseries %}
+            <div class="webseries-card" onclick="window.location.href='{% url 'webseries_detail' ws.webseries_id %}'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge" style="background: #46d369;">New Release</span>
+                    <img src="{{ ws.poster.url }}" alt="{{ ws.title }}">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">{{ ws.title }}</h3>
+                    <div class="webseries-meta">
+                        <span>{{ ws.year }}</span>
+                        <span>•</span>
+                        <span>{{ ws.episode_count }} Episodes</span>
+                    </div>
+                    <a href="{% url 'webseries_detail' ws.webseries_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- Trending Songs Section -->
+{% if recent_songs %}
+<section class="webseries-section fade-in-up">
+    <div class="webseries-header">
+        <h2>🎵 Latest Songs</h2>
+        <a href="{% url 'songs_list' %}" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">View All <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            {% for song in recent_songs %}
+            <div class="webseries-card" onclick="window.location.href='{% url 'songs_list' %}'" style="cursor: pointer;">
+                <div class="webseries-poster" style="aspect-ratio: 1/1;">
+                    <span class="webseries-badge">Song</span>
+                    <img src="{% if song.cover_image %}{{ song.cover_image.url }}{% else %}{% static 'images/logo/amanix_song_logo.png' %}{% endif %}" alt="{{ song.title }}" style="object-fit: cover;">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ song.title }}</h3>
+                    <div class="webseries-meta" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <span>{% if song.singers.all %}{% for s in song.singers.all %}{{ s.artist_name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% else %}Unknown Artist{% endif %}</span>
+                    </div>
+                    <!-- Floating Play Button -->
+                    <a href="{% url 'songs_list' %}" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- Movie Events Section -->
+{% if movie_events %}
+<section class="section-trending fade-in-up" style="margin-bottom: 2rem;">
+    <div class="webseries-header">
+        <h2>🎟️ Movie Events & Premieres</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending">
+            {% for event in movie_events %}
+            <div class="t-item" style="min-width: 280px; max-width: 280px; border-radius: 30px;">
+                <div class="t-item-image-wrapper">
+                    {% if event.movie.movie_image %}
+                    <img src="{{ event.movie.movie_image.url }}" alt="{{ event.title }}" style="filter: brightness(0.6);">
+                    {% endif %}
+                    <span class="featured-badge" style="background: #e50914;">{{ event.get_event_type_display }}</span>
+                </div>
+                <div class="info">
+                    <div class="title">{{ event.title }}</div>
+                    <div class="year"><i class="fa-regular fa-calendar-days"></i> {{ event.start_time|date:"M d, Y • h:i A" }}</div>
+                    
+                    {% if event.movie %}
+                    <a href="{% url 'movie' event.movie.movie_id %}" class="btn-play-float">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- Webseries Events Section -->
+{% if webseries_events %}
+<section class="section-trending fade-in-up" style="margin-bottom: 6rem;">
+    <div class="webseries-header">
+        <h2>🔔 Web Series Events & Premieres</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending">
+            {% for event in webseries_events %}
+            <div class="t-item" style="min-width: 280px; max-width: 280px; border-radius: 30px;">
+                <div class="t-item-image-wrapper">
+                    {% if event.webseries.poster %}
+                    <img src="{{ event.webseries.poster.url }}" alt="{{ event.title }}" style="filter: brightness(0.6);">
+                    {% endif %}
+                    <span class="featured-badge" style="background: #e50914;">{{ event.get_status_display }}</span>
+                </div>
+                <div class="info">
+                    <div class="title">{{ event.title }}</div>
+                    <div class="year"><i class="fa-regular fa-calendar-days"></i> {{ event.start_time|date:"M d, Y • h:i A" }}</div>
+                    
+                    {% if event.cta_url %}
+                    <a href="{{ event.cta_url }}" class="btn-play-float">
+                        <i class="fa-solid fa-bell"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+{% endif %}
+
+<!-- ////////////// footer//////////////? -->
+    <footer class="footer fade-in-up">
+        <div class="footer-container">
+             <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo" style="filter: brightness(1.2); opacity: 1;">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+              </div> 
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">TV Shows</a></li>
+                    <li><a href="#">Channels</a></li>
+                </ul>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="footer-section">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'app_feedback_page' %}">App Feedback</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="https://facebook.com/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/results?search_query=movies" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved. | <a href="{% url 'privacy_policy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms of Use</a></p>
+        </div>
+    </footer>
+
+    {% if messages %}
+    <script>
+        function showGlobalToast(message, isError = false) {
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                Object.assign(container.style, {
+                    position: 'fixed', top: '25px', right: '25px', zIndex: '99999',
+                    display: 'flex', flexDirection: 'column', gap: '12px'
+                });
+                document.body.appendChild(container);
+            }
+            
+            const toast = document.createElement('div');
+            Object.assign(toast.style, {
+                background: isError ? 'rgba(229, 9, 20, 0.95)' : 'rgba(40, 167, 69, 0.95)',
+                color: '#fff', padding: '16px 24px', borderRadius: '12px',
+                boxShadow: '0 15px 35px rgba(0,0,0,0.5)', fontWeight: '600',
+                fontSize: '1rem', backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255,255,255,0.15)', transform: 'translateX(120%)',
+                transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                display: 'flex', alignItems: 'center', gap: '10px'
+            });
+            
+            toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-xmark' : 'fa-circle-check'}" style="font-size: 1.2rem;"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+            setTimeout(() => {
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                showGlobalToast("{{ message|escapejs }}", {% if message.tags == 'error' %}true{% else %}false{% endif %});
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+
+</body>
+
+<script src="{% static 'js/slider.js' %}"></script>
+<script src="{% static 'js/search.js' %}"></script>
+</html>

@@ -1,0 +1,133 @@
+<!-- <?php 
+include('connection.php');
+session_start();
+$mail=$_SESSION['mail']; 
+$payid=$_GET['payment_id'];
+
+$_SESSION['membership_id']=$payid;
+
+$sql_u="SELECT * from member_registration where email='$mail'";
+$res1=mysqli_query($conn,$sql_u);
+    $rs=mysqli_fetch_array($res1);
+    $mail_id=$rs[3];
+    $member_id=$rs[0];
+
+    $sql_up="SELECT * from membership_plan where m_id=$payid";
+    $res=mysqli_query($conn,$sql_up);
+    $r=mysqli_fetch_array($res);
+    $p_idid=$r[0];
+    $pnm=$r[1];
+    $p_price=$r[2];
+    $dura=$r[3];
+
+    preg_match_all('/\d+/', $dura, $matches);
+    $numberCount = count($matches[0]);
+    if($numberCount==1){
+        $m_end_date=date('d-m-Y', strtotime('+'.$dura));
+    }
+    else{
+        $m_end_date=date('d-m-Y', strtotime('+1'.$dura));
+    }
+
+    $pay_date=date('d-m-Y');
+    
+
+    /////////////////////////// Insert Data  /////////////////////////////////////
+    if(isset($_POST['payment'])){
+        $c_num=$_POST['card-number'];
+        $ex_mm=$_POST['exp-month'];
+        $ex_yy=$_POST['exp-year'];
+        $cvv=$_POST['cvv'];
+        $c_name=$_POST['card-holder-name'];
+
+        $insert_record = mysqli_query($conn, "insert into `payment`(pay_date,membership_enddate,pay_method,pay_email,pay_price,cardholder_name,card_number,ex_month,ex_year,cvv_cvc,r_id,m_id) values('$pay_date','$m_end_date','Credit/Debit Card','$mail','$p_price','$c_name','$c_num','$ex_mm','$ex_yy','$cvv','$member_id','$p_idid')");
+        if ($insert_record) {
+            $_SESSION['pay']=true;
+            echo "<script>alert('Payment Successfull');</script>";
+            echo "<script>window.location.href='index.php';</script>";
+        } 
+         else {
+             echo "<script>alert('Some error occurred');</script>";
+         }
+    }
+
+?> -->
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'css/payment.css'%}">
+    {% comment %} <link rel="icon" type="Image/png" href="assets/icon/logo1.png"> {% endcomment %}
+    <title>Payment</title>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="sidebar">
+            <div class="link">
+                <a href="#"><img src="{% static 'images/logo/payment/card-icon.png'%}" alt="card"><span>Credit/Debit Card</span></a>
+                <a href="#"><img src="{% static 'images/logo/payment/upi.png'%}" alt="upi"><span>UPI</span></a>
+                <a href="#"><img src="{% static 'images/logo/payment/net-banking.png'%}" alt="Banking"><span>Internet Banking</span></a>
+            </div>
+        </div>
+
+        <div class="payment-form">
+            <h3>Pay by Credit/Debit Card</h3>
+            <div class="card-logos">
+                <img src="{% static 'images/logo/payment/visa.png'%}" alt="Visa">
+                <img src="{% static 'images/logo/payment/master-card.png'%}" alt="MasterCard">
+                <img src="{% static 'images/logo/payment/rupay.png'%}" alt="RuPay">
+                <img src="{% static 'images/logo/payment/discover.png'%}" alt="discover">
+            </div>
+            
+            <form method="post" action="{% url 'process_payment' %}">
+                {% csrf_token %}
+                <input type="hidden" name="sub_id" value="{{ subscription.sub_id }}">
+                {% comment %} <input type="hidden" name="user_id" value="{{ user.id }}"> {% endcomment %}
+                <input type="hidden" name="sub_price" value="{{ subscription.sub_price }}">
+                <div class="input-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" maxlength="19" name="card-number" placeholder="Enter card number" oninput="formatCardNumber(this)" required>
+                </div>
+                <div class="input-group1">
+                    <div class="lb">
+                    <label for="expiration-date">Expiration Date</label>
+                    <div class="expiration-date">
+                        <input type="text" maxlength="2" name="exp-month" placeholder="MM" oninput="formatCardNumber(this)" required>
+                        <input type="text" maxlength="2" name="exp-year" placeholder="YY" oninput="formatCardNumber(this)" required>
+                    </div>
+                    </div>
+                    <div class="label12">
+                        <label for="cvv">CVV/CVC</label>
+                        <input type="text" maxlength="3" name="cvv" placeholder="CVV/CVC" oninput="formatCardNumber(this)" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="card-holder-name">Card Holder Name</label>
+                    <input type="text" name="card-holder-name" placeholder="Enter card holder name" oninput="replaceNumbers(this)" required>
+                </div>
+                    <button type="submit" name="payment" class="btn">Make Payment</button>
+                    <a href="{% url 'subscription'%}"><button type="button" class="btn-cancel">Cancel</button></a>
+                   
+                </div>
+            </form>
+            <div class="payment-footer">
+                <div class="merchant-details">
+                    <strong>Email</strong> 
+                    <p>{{user_email}}</p>                   
+                        <strong>Duration</strong>
+                        <p>Start Date: {{ start_date }}</p>
+                        <p>End Date: {{ end_date }}</p>              
+                </div>                
+                <div class="amo">
+                    <p>Payment Amount:</p>
+                    <span>&#8377;{{ subscription.sub_price }}</span>
+                </div>
+            </div> 
+        </div>
+    </div>
+</body>
+<script src="{% static 'js/payment.js' %}"></script>
+</html>

@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Contact Us - Amanix</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <section class="info" style="margin-top: 120px;">
+        <div class="hero-header" style="margin-bottom: 50px;">
+            <div class="hero-header-logo">
+                <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo">
+            </div>
+            <div class="hero-header-text">
+                <div style="color: #e50914; font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Amanix Corporation</div>
+                <h1>Get in <span>Touch</span></h1>
+                <p>Have a question, feedback, or need support? We’re always here to help you get the best streaming experience.</p>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px;">
+            
+            <a href="mailto:support@amanix.com" class="contact-card">
+                <div class="contact-icon"><i class="fas fa-headset"></i></div>
+                <div class="contact-info">
+                    <h3>Customer Support</h3>
+                    <p>support@amanix.com</p>
+                </div>
+            </a>
+            
+            <a href="mailto:techsupport@amanix.com" class="contact-card">
+                <div class="contact-icon"><i class="fas fa-tools"></i></div>
+                <div class="contact-info">
+                    <h3>Technical Support</h3>
+                    <p>techsupport@amanix.com</p>
+                </div>
+            </a>
+            
+            <a href="mailto:business@amanix.com" class="contact-card">
+                <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="contact-info">
+                    <h3>Business Inquiries</h3>
+                    <p>business@amanix.com</p>
+                </div>
+            </a>
+            
+            <div class="contact-card" style="cursor: default;">
+                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="contact-info">
+                    <h3>Headquarters</h3>
+                    <p>Amanix Corporation, Ahmedabad, Gujarat</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 60px;">
+            <h2 style="text-align: center; justify-content: center; margin-bottom: 30px;">Follow Our Developer</h2>
+            <div class="social-links" style="gap: 20px;">
+                <a href="https://www.instagram.com/krishakbari__001" target="_blank" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/krish-akbari-576571323/" target="_blank" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/krishakbari07" target="_blank" style="width: 50px; height: 50px; font-size: 1.5rem;"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+    
+    {% include 'footer.html' %}
+</body>
+</html>

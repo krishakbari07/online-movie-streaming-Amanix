@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies - Amanix</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            padding-top: 80px;
+        }
+        .movies-page-container {
+            max-width: 1400px;
+            margin: 0 auto 50px;
+            padding: 0 40px;
+        }
+        .page-header {
+            margin-bottom: 50px;
+            text-align: left;
+            position: relative;
+        }
+        .page-header h1 {
+            color: #fff;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+        .page-header h1 span {
+            color: #e50914;
+        }
+        .page-header .subtitle {
+            color: #999;
+            font-size: 1.2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            color: #e50914;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            transform: translateX(-5px);
+            opacity: 0.8;
+        }
+                .languages-filter-wrapper {
+            margin-bottom: 50px;
+            padding: 20px 0;
+        }
+        .languages-nav {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .languages-nav::-webkit-scrollbar {
+            display: none;
+        }
+        .language-nav-chip {
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .language-nav-chip:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .language-nav-chip.active {
+            background: #e50914;
+            border-color: #e50914;
+            box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        @media (max-width: 1200px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 25px;
+            }
+        }
+        @media (max-width: 768px) {
+            .movies-page-container {
+                padding: 0 20px;
+            }
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="movies-page-container">
+        <a href="{% url 'index' %}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Exploration
+        </a>
+
+        <div class="hero-header" style="margin-bottom: 50px; margin-top: 20px;">
+            <div class="hero-header-text">
+                <h1>{% if selected_language %}{{ selected_language.language_name }} {% endif %}Movie Collection</h1>
+                <p>Welcome to the ultimate cinematic experience. Discover new blockbuster hits, watch your favorite actors ad-free, and enjoy high-definition visual quality exclusive to Amanix. Your movie night, your rules.</p>
+            </div>
+        </div>
+
+        {% if languages %}
+        <div class="languages-filter-wrapper">
+            <div class="languages-nav">
+                <a href="{% url 'movies_list' %}" 
+                   class="language-nav-chip {% if not selected_language %}active{% endif %}">
+                    All Movies
+                </a>
+                {% for lang in languages %}
+                <a href="{% url 'movies_by_language' lang.language_id %}" 
+                   class="language-nav-chip {% if selected_language and lang.language_id == selected_language.language_id %}active{% endif %}">
+                    {{ lang.language_name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if movies %}
+        <div class="movies-grid">
+            {% for movie in movies %}
+            <div class="t-item" onclick="window.location.href='{% url 'movie' movie.movie_id %}'" style="cursor: pointer; width: 100%; height: 260px; max-width: none; border-radius: 20px;">
+                <div class="t-item-image-wrapper">
+                    <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                </div>
+                <div class="info">
+                    <div class="title">{{ movie.movie_name }}</div>
+                    <div class="year">{{ movie.movie_release_date.year }} • {{ movie.movie_duration }}</div>
+                    <a href="{% url 'movie' movie.movie_id %}#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a> 
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align: center; color: #666; padding: 100px 20px; background: rgba(255, 255, 255, 0.02); border-radius: 30px; border: 1px dashed rgba(255, 255, 255, 0.1);">
+            <i class="fas fa-film" style="font-size: 64px; margin-bottom: 25px; color: #333; opacity: 0.5;"></i>
+            <h3 style="color: #fff; margin-bottom: 10px;">No Movies Found</h3>
+            <p>We couldn't find any movies{% if selected_language %} in {{ selected_language.language_name }}{% endif %} at the moment.</p>
+            <a href="{% url 'movies_list' %}" class="back-link" style="margin-top: 30px;">Browse All Movies</a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+</html>
+

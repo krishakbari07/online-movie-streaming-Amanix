@@ -1,0 +1,447 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ artist.artist_name }} - Amanix</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+        .artist-profile {
+            position: relative;
+            min-height: 500px;
+            margin-top: 60px;
+        }
+        .artist-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+            z-index: 0;
+        }
+        .artist-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+        .artist-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .artist-photo-section {
+            flex-shrink: 0;
+        }
+        .artist-photo {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(229, 9, 20, 0.5);
+        }
+        .artist-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .artist-info-section {
+            flex: 1;
+        }
+        .artist-name {
+            font-size: 3rem;
+            color: #e50914;
+            margin: 0 0 15px 0;
+        }
+        .artist-category-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            border-radius: 20px;
+            color: #e50914;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .artist-bio {
+            color: #b3b3b3;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .artist-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+        .stat-label {
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+        .follow-btn {
+            padding: 15px 40px;
+            background: #e50914;
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .follow-btn:hover {
+            background: #f40612;
+            transform: scale(1.05);
+        }
+        .follow-btn.following {
+            background: #28a745;
+        }
+        .movies-section {
+            max-width: 1400px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            font-size: 2rem;
+            color: #e50914;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e50914;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+        }
+        .movie-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+        .movie-card-info {
+            padding: 15px;
+        }
+        .movie-card-info h4 {
+            margin: 0 0 5px 0;
+            color: #fff;
+            font-size: 16px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 1200px) {
+            .artist-content {
+                max-width: 100%;
+                padding: 50px 15px;
+                gap: 30px;
+            }
+            .artist-photo {
+                width: 250px;
+                height: 250px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .artist-profile {
+                min-height: 400px;
+            }
+            .artist-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 15px;
+                gap: 25px;
+            }
+            .artist-photo {
+                width: 200px;
+                height: 200px;
+            }
+            .artist-name {
+                font-size: 2rem;
+            }
+            .artist-bio {
+                font-size: 14px;
+            }
+            .artist-stats {
+                gap: 20px;
+                justify-content: center;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .movies-section {
+                padding: 0 15px;
+                margin: 30px auto;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .movie-card img {
+                height: 220px;
+            }
+        }
+        @media (max-width: 480px) {
+            .artist-profile {
+                min-height: 350px;
+            }
+            .artist-content {
+                padding: 30px 10px;
+            }
+            .artist-photo {
+                width: 150px;
+                height: 150px;
+            }
+            .artist-name {
+                font-size: 1.5rem;
+            }
+            .artist-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .follow-btn {
+                width: 100%;
+                padding: 12px 30px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .movie-card img {
+                height: 200px;
+            }
+            .movie-card-info h4 {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="artist-profile">
+        <div class="artist-background">
+            {% if artist.artist_background %}
+                <img src="{{ artist.artist_background.url }}" alt="{{ artist.artist_name }}">
+            {% endif %}
+        </div>
+        <div class="artist-content">
+            <div class="artist-photo-section">
+                <div class="artist-photo">
+                    <img src="{{ artist.artist_photo.url }}" alt="{{ artist.artist_name }}">
+                </div>
+            </div>
+            <div class="artist-info-section">
+                <h1 class="artist-name">{{ artist.artist_name }}</h1>
+                <span class="artist-category-badge">{{ artist.get_category_display }}</span>
+                {% if artist.artist_bio %}
+                <p class="artist-bio">{{ artist.artist_bio }}</p>
+                {% endif %}
+                <div class="artist-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ artist.popularity_rating }}</div>
+                        <div class="stat-label">Popularity</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ artist.follower_count }}</div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ artist.movies.count }}</div>
+                        <div class="stat-label">Movies</div>
+                    </div>
+                </div>
+                {% if is_login %}
+                <button class="follow-btn {% if is_following %}following{% endif %}" 
+                        id="followBtn" 
+                        data-artist-id="{{ artist.artist_id }}">
+                    {% if is_following %}
+                        <i class="fas fa-check"></i> Following
+                    {% else %}
+                        <i class="fas fa-plus"></i> Follow Artist
+                    {% endif %}
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}"><button class="follow-btn">Login to Follow</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="movies-section">
+        <a href="{% url 'artist_list' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Artists
+        </a>
+
+        {% if movies_acted %}
+        <h2 class="section-title">Movies Acted In</h2>
+        <div class="movies-grid">
+            {% for movie in movies_acted %}
+            <div class="movie-card" onclick="window.location.href='{% url 'movie' movie.movie_id %}';">
+                <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                <div class="movie-card-info">
+                    <h4>{{ movie.movie_name }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if movies_directed %}
+        <h2 class="section-title">Movies Directed</h2>
+        <div class="movies-grid">
+            {% for movie in movies_directed %}
+            <div class="movie-card" onclick="window.location.href='{% url 'movie' movie.movie_id %}';">
+                <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                <div class="movie-card-info">
+                    <h4>{{ movie.movie_name }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if movies_composed %}
+        <h2 class="section-title">Movies Composed</h2>
+        <div class="movies-grid">
+            {% for movie in movies_composed %}
+            <div class="movie-card" onclick="window.location.href='{% url 'movie' movie.movie_id %}';">
+                <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                <div class="movie-card-info">
+                    <h4>{{ movie.movie_name }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if artist_songs %}
+        <h2 class="section-title">Songs</h2>
+        <div class="movies-grid">
+            {% for song in artist_songs %}
+            <div class="movie-card" onclick="window.location.href='{% url 'songs_list' %}';">
+                <img src="{% if song.cover_image %}{{ song.cover_image.url }}{% else %}{% static 'images/logo/LOGO3.png' %}{% endif %}" alt="{{ song.title }}">
+                <div class="movie-card-info">
+                    <h4>{{ song.title }}</h4>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not movies_acted and not movies_directed and not movies_composed and not artist_songs %}
+        <p style="text-align: center; color: #b3b3b3; margin-top: 50px;">No movies or songs found for this artist.</p>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% if is_login %}
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        document.getElementById('followBtn').addEventListener('click', function() {
+            const artistId = this.dataset.artistId;
+            const btn = this;
+            const csrftoken = getCookie('csrftoken');
+            
+            fetch(`/artist/${artistId}/follow/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.is_following) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Following';
+                        btn.classList.add('following');
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-plus"></i> Follow Artist';
+                        btn.classList.remove('following');
+                    }
+                    // Update follower count if displayed
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    {% endif %}
+</body>
+</html>
+

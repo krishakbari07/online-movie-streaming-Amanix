@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn More - Subscription Plans</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 100vw;
+            margin: 0 2rem;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #e50914;
+        }
+
+        p {
+            font-size: 16px;
+            color: #8c8c8c;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-size: 16px;
+            color: #8c8c8c;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "✔";
+            color: #e50914;
+            position: absolute;
+            left: 0;
+        }
+
+        .faq {
+            margin-top: 40px;
+        }
+
+        .faq h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .faq p {
+            font-size: 14px;
+            color: #8c8c8c;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #8c8c8c;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #0071eb;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Learn More About Our Subscription Plans</h1>
+        
+        <!-- Features Section -->
+        <section>
+            <h2>Features</h2>
+            <p>Our subscription plans are designed to give you the best streaming experience. Here's what you get:</p>
+            <ul>
+                <li>Full HD (1080p) streaming on all plans.</li>
+                <li>Ad-free experience for uninterrupted viewing.</li>
+                <li>Watch on multiple devices simultaneously (depending on the plan).</li>
+                <li>Access to exclusive content and early releases.</li>
+            </ul>
+        </section>
+
+        <!-- Benefits Section -->
+        <section>
+            <h2>Benefits</h2>
+            <p>Why choose our subscription plans?</p>
+            <ul>
+                <li>Affordable pricing with flexible options.</li>
+                <li>High-quality streaming on all devices.</li>
+                <li>24/7 customer support for any issues.</li>
+                <li>Regular updates with new content.</li>
+            </ul>
+        </section>
+
+        <!-- FAQs Section -->
+        <section class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div>
+                <h3>What is the difference between the plans?</h3>
+                <p>The main difference is the number of devices you can stream on simultaneously and the video quality (SD, HD, or Ultra HD).</p>
+            </div>
+            <div>
+                <h3>Can I change my plan later?</h3>
+                <p>No, you can not upgrade or downgrade your plan at any time.</p>
+            </div>
+            <div>
+                <h3>Is there a free trial?</h3>
+                <p>We currently do not offer a free trial.</p>
+            </div>
+            <div>
+                <h3>How do I cancel my subscription?</h3>
+                <p>You can not cancel your subscription from your account settings.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Need more help? <a href="{% url 'contact' %}">Contact Us</a>.</p>
+            <p>&copy; 2023 Movie Streaming. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Receipt</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 2cm;
+            @frame footer_frame {
+                -pdf-frame-content: footerContent;
+                bottom: 1cm;
+                margin-left: 2cm;
+                margin-right: 2cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #e50914;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            background-color: #cfcfcf;
+        }
+        .brand-logo {
+            width: 180px;
+            height: auto;
+        }
+        .invoice-title {
+            font-size: 24px;
+            text-align: right;
+            color: #555;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .info-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .label {
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .value {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .lines-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .lines-table th {
+            text-align: left;
+            padding: 12px 10px;
+            background-color: #f5f5f5;
+            color: #555;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+        .lines-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .total-section {
+            width: 100%;
+            text-align: right;
+        }
+        .total-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+        .total-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e50914;
+        }
+        .status-paid {
+            color: #28a745;
+            border: 2px solid #28a745;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block;
+            font-size: 12px;
+        }
+        #footerContent {
+            text-align: center;
+            color: #aaa;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <table class="header-table">
+        <tr>
+            <td width="50%" valign="bottom">
+                <img src="{% static 'images/logo/LOGO3.png' %}" class="brand-logo" alt="AMANIX">
+                <div style="font-size: 12px; color: #777; margin-top: 5px;">Premium Streaming Service</div>
+            </td>
+            <td width="50%" valign="bottom" align="right">
+                <div class="invoice-title">RECEIPT</div>
+                <div style="font-size: 12px; color: #777; margin-top: 5px;">#{{ payment.transaction_id }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Billing Info -->
+    <table class="info-table">
+        <tr>
+            <td width="50%" valign="top">
+                <div class="label">Billed To</div>
+                <div class="value">{{ payment.user.nm }}</div>
+                <div style="font-size: 12px; color: #555;">{{ payment.user.email }}</div>
+            </td>
+            <td width="50%" valign="top" align="right">
+                <div class="label">Payment Date</div>
+                <div class="value">{{ payment.created_at|date:"F d, Y" }}</div>
+                
+                <div class="label" style="margin-top: 10px;">Payment Method</div>
+                <div class="value">Card ending in {{ payment.card_last4 }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Line Items -->
+    <table class="lines-table">
+        <thead>
+            <tr>
+                <th width="50%">Description</th>
+                <th width="25%">Validity</th>
+                <th width="25%" align="right">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <strong>{{ payment.subscription.sub_name }} Plan</strong><br>
+                    <span style="font-size: 11px; color: #777;">Amanix Premium Subscription</span>
+                </td>
+                <td>
+                    {{ payment.start_date|date:"M d, Y" }} - {{ payment.end_date|date:"M d, Y" }}
+                </td>
+                <td align="right">₹{{ payment.sub_price }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Totals -->
+    <table width="100%">
+        <tr>
+            <td width="60%"></td>
+            <td width="40%" align="right">
+                <table width="100%">
+                    <tr>
+                        <td align="right" style="padding-bottom: 10px;"><strong>Subtotal:</strong></td>
+                        <td align="right" style="padding-bottom: 10px;">₹{{ payment.sub_price }}</td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-bottom: 10px;"><strong>Tax (0%):</strong></td>
+                        <td align="right" style="padding-bottom: 10px;">₹0.00</td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="total-label" style="padding-top: 10px; border-top: 2px solid #333;">TOTAL PAID:</td>
+                        <td align="right" class="total-amount" style="padding-top: 10px; border-top: 2px solid #333;">₹{{ payment.sub_price }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Status Badge (Visual only) -->
+    <div style="margin-top: 30px;">
+        <span class="status-paid">PAID IN FULL</span>
+    </div>
+
+    <!-- Footer Frame Content -->
+    <div id="footerContent">
+        Thank you for choosing Amanix! Stream Unlimited Movies & Web Series.<br>
+        For support, contact us at support@amanix.com. This is a system-generated receipt.
+    </div>
+
+</body>
+</html>
+

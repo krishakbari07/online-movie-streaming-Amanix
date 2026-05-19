@@ -1,0 +1,537 @@
+ 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/default.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/header-style.css">
+
+</head>
+<body>
+
+                              <!-- navbar -->
+    
+<link rel="stylesheet" href="/static/css/navbar.css">
+<style>
+    /* Critical fix for oversized profile photo */
+    .profile_image {
+        width: 75px !important;
+        height: 75px !important;
+        min-width: 75px !important;
+        min-height: 75px !important;
+        margin: 10px auto !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        display: block !important;
+        background: linear-gradient(45deg, #e50914, #ffd166);
+        padding: 4px !important;
+        box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+    }
+    .profile_image img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 50% !important;
+        border: 2px solid #0f1014 !important;
+        display: block !important;
+    }
+    .profile {
+        font-family: 'Inter', sans-serif;
+    }
+    .user-sidebar-icon {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        object-fit: cover !important;
+    }
+</style>
+<div class="mobile-top-bar">
+    <div class="mobile-logo">
+        <a href="/">
+            <img src="/static/images/logo/LOGO3.png" alt="Amanix Logo">
+        </a>
+    </div>
+    <div class="mobile-actions">
+        <a href="/search/" class="mobile-search-btn" style="color: white; font-size: 1.2rem; margin-right: 15px;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+        
+            <a href="/login/" class="mobile-profile-btn">
+                <i class="fa-regular fa-user-circle"></i>
+            </a>
+        
+    </div>
+</div>
+<nav class="sidebar">
+    <div class="logo">
+        <a href="/">
+            <img src="/static/images/logo/LOGO3.png" alt="Amanix Logo">
+        </a>
+    </div>
+    <ul class="nav-links">
+        <li class="nav-item">
+            <a href="/" class="nav-link">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-text">Home</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/#movies" class="nav-link">
+                <i class="fa-solid fa-film"></i>
+                <span class="nav-text">Movies</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/webseries/" class="nav-link">
+                <i class="fa-solid fa-tv"></i>
+                <span class="nav-text">Web Series</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/artists/" class="nav-link">
+                <i class="fa-solid fa-users"></i>
+                <span class="nav-text">Actors</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/search/" class="nav-link">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="nav-text">Search</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="nav-actions-bottom">
+        <ul class="nav-links">
+            
+                <li class="nav-item">
+                    <a href="/login/" class="nav-link">
+                        <i class="fa-regular fa-user-circle"></i>
+                        <span class="nav-text">Login</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+
+<div class="profile" id="pro">
+    <div class="profile_popup">
+        <span class="p_mailid">None</span>
+        <span class="btn_popup" id="close">X</span>
+        <div class="profile_image"><img src="/media/profile_pics/usericon.png"></div>           
+        <span class="p_name"></span>
+        <a class="change_pic" href="/profile_pic/">change profile</a>
+        
+            <p>You have not purchased any subscription plan.</p>
+        
+        
+        <div class="profile_logout">
+            <a href="/logout/"><div class="span_logout"><span>Logout</span></div></a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let popup = document.getElementById("popup");
+        let popupMobile = document.getElementById("popup-mobile");
+        let pro = document.getElementById("pro");
+        let close = document.getElementById("close");
+    
+        function openProfile() {
+            pro.style.display = "block";
+        }
+
+        if (popup) popup.onclick = openProfile;
+        if (popupMobile) popupMobile.onclick = openProfile;
+        
+        if (close && pro) {
+            close.onclick = () => {
+                pro.style.display = "none";
+            };
+        }
+    });
+</script>
+
+
+
+
+<section class="hotstar-slider-wrapper">
+    
+        <div class="hotstar-slider-track" id="heroTrack">
+            
+            <div class="hotstar-slide" data-index="0" data-url="/movie/9/">
+                <!-- Blurred background to fill empty space for portrait posters cleanly -->
+                <img src="/media/slider/8FHOtUpNIk5ZPEay2N2EY5lrxkv_kOB2qgK.webp" style="position: absolute; width:100%; height:100%; object-fit:cover; filter:blur(25px); opacity:0.6; z-index:-1;">
+                <img src="/media/slider/8FHOtUpNIk5ZPEay2N2EY5lrxkv_kOB2qgK.webp" alt="Dhurandhar" class="main-img">
+                
+                <div class="slide-overlay"></div>
+                
+                <div class="slide-content">
+                    <div style="margin-bottom: 12px;">
+                        <span class="featured-badge" style="position: static;">FEATURED</span>
+                    </div>
+                    
+                    <h1>Dhurandhar</h1>
+                    
+                    
+                    <p>An underworld saga following a network of criminals, informants and operatives whose lives intersect, navigating covert operations, espionage and betrayals.</p>
+                    
+                    
+                    
+                    <a href="/movie/9/#player" class="play-btn-circle" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+        <button class="slider-nav prev" id="heroPrev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-nav next" id="heroNext"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const track = document.getElementById('heroTrack');
+                const slides = document.querySelectorAll('.hotstar-slide');
+                const prevBtn = document.getElementById('heroPrev');
+                const nextBtn = document.getElementById('heroNext');
+                
+                if (slides.length > 0) {
+                    let currentIndex = 0;
+                    let autoPlayTimer;
+
+                    function updateSlider() {
+                        slides.forEach((slide, index) => {
+                            slide.classList.remove('active');
+                            let diff = index - currentIndex;
+                            if (diff < -1) diff += slides.length;
+                            if (diff > slides.length - 2) diff -= slides.length;
+                            
+                            const isMobile = window.innerWidth <= 768;
+                            const leftPad = isMobile ? 4 : 17.5; 
+                            const activeWidth = isMobile ? 92 : 65;
+                            const overlap = isMobile ? 8 : 20;
+                            
+                            slide.style.transformOrigin = 'left center';
+                            
+                            if (diff === 0) {
+                                slide.classList.add('active');
+                                slide.style.transform = `translate(${leftPad}vw, -50%) scale(1)`;
+                                slide.style.zIndex = 10;
+                                slide.style.opacity = 1;
+                            } else if (diff === 1) {
+                                slide.style.transform = `translate(${leftPad + activeWidth - overlap}vw, -50%) scale(0.9)`;
+                                slide.style.zIndex = 9;
+                                slide.style.opacity = 0.8;
+                            } else if (diff === -1) {
+                                slide.style.transform = `translate(-${activeWidth}vw, -50%) scale(0.9)`;
+                                slide.style.zIndex = 9;
+                                slide.style.opacity = 0;
+                            } else {
+                                slide.style.transform = `translate(100vw, -50%) scale(0.5)`;
+                                slide.style.zIndex = 1;
+                                slide.style.opacity = 0;
+                            }
+                        });
+                    }
+
+                    function nextSlide() { currentIndex = (currentIndex + 1) % slides.length; updateSlider(); resetTimer(); }
+                    function prevSlide() { currentIndex = (currentIndex - 1 + slides.length) % slides.length; updateSlider(); resetTimer(); }
+                    function resetTimer() { clearInterval(autoPlayTimer); autoPlayTimer = setInterval(nextSlide, 6000); }
+
+                    nextBtn.addEventListener('click', nextSlide);
+                    prevBtn.addEventListener('click', prevSlide);
+                    
+                    slides.forEach((slide, index) => {
+                        slide.addEventListener('click', () => {
+                            if (currentIndex !== index) {
+                                currentIndex = index;
+                                updateSlider();
+                                resetTimer();
+                            } else {
+                                const url = slide.getAttribute('data-url');
+                                if (url && url !== "") {
+                                    window.location.href = url;
+                                }
+                            }
+                        });
+                    });
+
+                    updateSlider();
+                    resetTimer();
+                    
+                    window.addEventListener('resize', () => {
+                        slides.forEach(slide => slide.style.transition = 'none');
+                        updateSlider();
+                        setTimeout(() => { slides.forEach(slide => slide.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.4, 1)'); }, 50);
+                    });
+                }
+            });
+        </script>
+    
+</section>
+
+
+
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Action</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+            <div class="t-item" onclick="window.location.href='/movie/9/'" style="cursor: pointer;">
+                <div class="t-item-image-wrapper">
+                    <img src="/media/images/8FHOtUpNIk5ZPEay2N2EY5lrxkv.webp" alt="Dhurandhar">
+                </div>
+                <div class="info">
+                    <div class="title">Dhurandhar</div>
+                    <div class="year"> • 3h 34m</div>
+                    
+                    <a href="/movie/9/#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;"><i class="fa-solid fa-play"></i></a> 
+                </div>
+            </div>
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Horror</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Comedy</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Thriller</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Crime</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="movies" style="scroll-margin-top: 80px;"></div>
+<section class="section-trending">
+    <span class="span" style="color:white;">Adventure</span>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.trending').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="trending new-releases">
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.trending').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+<div id="webseries" style="scroll-margin-top: 80px;"></div>
+
+<!-- Trending Webseries Section -->
+
+<section class="webseries-section">
+    <div class="webseries-header">
+        <h2>🔥 Trending Web Series</h2>
+        <a href="/webseries/" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">View All <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            
+            <div class="webseries-card" onclick="window.location.href='/webseries/1/'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge">Trending #1</span>
+                    <img src="/media/webseries/posters/download.jpeg" alt="Game of Throns">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">Game of Throns</h3>
+                    <div class="webseries-meta">
+                        <span>2009</span>
+                        <span>•</span>
+                        <span>3 Episodes</span>
+                    </div>
+                    <!-- Floating Play Button -->
+                    <a href="/webseries/1/#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+
+<!-- Featured Webseries Section -->
+
+<section class="webseries-section" style="background: linear-gradient(180deg, #0a0606 0%, #1a0808 50%, #0a0606 100%); padding: 60px 4rem;">
+    <div class="webseries-header">
+        <h2>✨ Featured Picks</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            
+            <div class="webseries-card" onclick="window.location.href='/webseries/1/'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge" style="background: #ffd700; color: #000;">Award Winning</span>
+                    <img src="/media/webseries/posters/download.jpeg" alt="Game of Throns">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">Game of Throns</h3>
+                    <div class="webseries-meta">
+                        <span>2009</span>
+                        <span>•</span>
+                        <span>Hindi</span>
+                    </div>
+                    <a href="/webseries/1/#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+
+<!-- Latest Webseries Section -->
+
+<section class="webseries-section">
+    <div class="webseries-header">
+        <h2>🆕 Recently Added</h2>
+    </div>
+    <div class="row-container">
+        <button class="row-nav prev" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: -800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="webseries-grid">
+            
+            <div class="webseries-card" onclick="window.location.href='/webseries/1/'" style="cursor: pointer;">
+                <div class="webseries-poster">
+                    <span class="webseries-badge" style="background: #46d369;">New Release</span>
+                    <img src="/media/webseries/posters/download.jpeg" alt="Game of Throns">
+                    <div class="webseries-poster-overlay"></div>
+                </div>
+                <div class="webseries-info">
+                    <h3 class="webseries-title">Game of Throns</h3>
+                    <div class="webseries-meta">
+                        <span>2009</span>
+                        <span>•</span>
+                        <span>3 Episodes</span>
+                    </div>
+                    <a href="/webseries/1/#player" class="btn-play-float" onclick="event.stopPropagation(); window.location.href=this.href;">
+                        <i class="fa-solid fa-play"></i>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        <button class="row-nav next" onclick="this.parentElement.querySelector('.webseries-grid').scrollBy({left: 800, behavior: 'smooth'})"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</section>
+
+
+<!-- Webseries Events Section -->
+
+
+<!-- ////////////// footer//////////////? -->
+    <footer class="footer">
+        <div class="footer-container">
+             <div class="footer-left">
+                <img src="/static/images/logo/LOGO3.png" alt="Amanix Logo" style="filter: brightness(1.2); opacity: 1;">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+              </div> 
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">TV Shows</a></li>
+                    <li><a href="#">Channels</a></li>
+                </ul>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="footer-section">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="/contact/">Contact Us</a></li>
+                    <li><a href="/app-feedback/">App Feedback</a></li>
+                    <li><a href="/terms/">Terms of Use</a></li>
+                    <li><a href="/privacy_policy/">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="https://facebook.com/" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/results?search_query=movies" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved. | <a href="/privacy_policy/">Privacy Policy</a> | <a href="/terms/">Terms of Use</a></p>
+        </div>
+    </footer>
+
+    
+
+</body>
+<script src="/static/js/slider.js"></script>
+<script src="/static/js/search.js"></script>
+</html>

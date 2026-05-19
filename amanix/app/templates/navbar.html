@@ -1,0 +1,304 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+
+<!-- ════════════════════════════════════════════════════════
+     MOBILE TOP BAR
+     ════════════════════════════════════════════════════════ -->
+<div class="mobile-top-bar">
+    <div class="mobile-logo">
+        <a href="{% url 'index' %}">
+            <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix">
+        </a>
+    </div>
+    <div class="mobile-actions">
+        <a href="{% url 'search_movies' %}" class="mobile-search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </a>
+        {% if is_login %}
+            <a href="javascript:void(0)" id="popup-mobile" class="mobile-profile-btn">
+                {% if profile_image %}
+                    <img src="{{ profile_image }}" class="user-sidebar-icon" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">
+                {% else %}
+                    <i class="fa-regular fa-user-circle"></i>
+                {% endif %}
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="mobile-profile-btn">
+                <i class="fa-regular fa-user-circle"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     BACKDROP (click to close)
+     ════════════════════════════════════════════════════════ -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     SIDEBAR
+     ════════════════════════════════════════════════════════ -->
+<nav class="sidebar" id="mainSidebar">
+
+    <!-- ── Logo ─────────────────────────────────────────────── -->
+    <div class="logo">
+        <a href="{% url 'index' %}">
+            <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo">
+        </a>
+    </div>
+
+    <!-- ── Main nav links ───────────────────────────────── -->
+    <ul class="nav-links">
+
+        <li class="nav-item">
+            <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                <i class="fa-solid fa-house"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            <span class="nav-tooltip">Home</span>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'search_movies' %}" class="nav-link {% if request.resolver_match.url_name == 'search_movies' %}active{% endif %}">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span class="nav-text">Search</span>
+            </a>
+            <span class="nav-tooltip">Search</span>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'webseries_list' %}" class="nav-link {% if request.resolver_match.url_name == 'webseries_list' %}active{% endif %}">
+                <i class="fa-solid fa-tv"></i>
+                <span class="nav-text">Web Series</span>
+            </a>
+            <span class="nav-tooltip">Web Series</span>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'movies_list' %}" class="nav-link {% if request.resolver_match.url_name == 'movies_list' %}active{% endif %}">
+                <i class="fa-solid fa-film"></i>
+                <span class="nav-text">Movies</span>
+            </a>
+            <span class="nav-tooltip">Movies</span>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'artist_list' %}" class="nav-link {% if request.resolver_match.url_name == 'artist_list' %}active{% endif %}">
+                <i class="fa-solid fa-users"></i>
+                <span class="nav-text">Actors</span>
+            </a>
+            <span class="nav-tooltip">Actors</span>
+        </li>
+
+        <li class="nav-item">
+            <a href="{% url 'songs_list' %}" class="nav-link {% if request.resolver_match.url_name == 'songs_list' %}active{% endif %}">
+                <i class="fa-solid fa-music"></i>
+                <span class="nav-text">Songs</span>
+            </a>
+            <span class="nav-tooltip">Songs</span>
+        </li>
+
+    </ul>
+
+    <!-- ── Bottom: Profile / Login ──────────────────────── -->
+    <div class="nav-divider"></div>
+    <div class="nav-actions-bottom">
+        <ul class="nav-links">
+            {% if is_login %}
+                <li class="nav-item">
+                    <a href="javascript:void(0)" class="nav-link" id="popup">
+                        {% if profile_image %}
+                            <img src="{{ profile_image }}" class="user-sidebar-icon">
+                        {% else %}
+                            <i class="fa-regular fa-circle-user"></i>
+                        {% endif %}
+                        <span class="nav-text">Profile</span>
+                    </a>
+                    <span class="nav-tooltip">Profile</span>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="nav-link">
+                        <i class="fa-regular fa-circle-user"></i>
+                        <span class="nav-text">Login</span>
+                    </a>
+                    <span class="nav-tooltip">Login</span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+</nav>
+
+<!-- ════════════════════════════════════════════════════════
+     PROFILE POPUP
+     ════════════════════════════════════════════════════════ -->
+<div class="profile" id="pro">
+    <div class="profile_popup">
+        <span class="p_mailid">{{ user_email }}</span>
+        <span class="btn_popup" id="close">✕</span>
+        <div class="profile_image">
+            <img src="{{ profile_image }}" alt="Profile">
+        </div>
+        <span class="p_name">{{ user_name }}</span>
+        <a class="change_pic" href="{% url 'profile_pic' %}">Change Profile</a>
+
+        {% if sub_plan %}
+            <span class="p_membership">{{ sub_plan }}</span>
+            <span class="plan_end">Plan End: {{ end_date }}</span>
+        {% else %}
+            <p>You have not purchased any subscription plan.</p>
+        {% endif %}
+
+        {% if recent_sessions %}
+        <div class="session-history">
+            <div class="session-history__header">
+                <span>Recent Logins</span>
+                <span class="session-history__meta">Last 5 sessions</span>
+            </div>
+            <ul class="session-history__list">
+                {% for session in recent_sessions %}
+                <li class="session-history__item">
+                    <div class="session-history__time">{{ session.login_time|date:"M d, Y h:i A" }}</div>
+                    <div class="session-history__details">
+                        <span class="session-history__ip">IP: {{ session.ip_address|default:"Not captured" }}</span>
+                        {% if session.logout_time %}
+                            <span class="session-history__status">Signed out {{ session.logout_time|timesince:session.login_time }} later</span>
+                        {% else %}
+                            <span class="session-history__status session-history__status--active">● Active now</span>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="profile_logout">
+            <a href="{% url 'logout' %}">
+                <div class="span_logout">Logout</div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+    const sidebar  = document.getElementById('mainSidebar');
+    const toggle   = document.getElementById('sidebarToggle');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const popup    = document.getElementById('popup');
+    const popupMob = document.getElementById('popup-mobile');
+    const pro      = document.getElementById('pro');
+    const closeBtn = document.getElementById('close');
+
+    let isOpen = false;
+    let hoverTimeout;
+
+    /* ── Open / Close sidebar on hover ─────────────────────────── */
+    function openSidebar() {
+        isOpen = true;
+        sidebar.classList.add('open');
+        backdrop.classList.add('visible');
+    }
+
+    function closeSidebar() {
+        isOpen = false;
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('visible');
+    }
+
+    sidebar.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(openSidebar, 150); // slight delay to prevent accidental opens
+    });
+
+    sidebar.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimeout);
+        closeSidebar();
+    });
+
+    if (backdrop) backdrop.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+        closeSidebar();
+    });
+
+    /* Keyboard: Escape to close */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeSidebar();
+    });
+
+    /* ── Profile popup ────────────────────────────────── */
+    function openProfile(e) {
+        e.stopPropagation();
+        if (pro) {
+            pro.style.display = 'block';
+        }
+    }
+    function closeProfile() {
+        if (pro) pro.style.display = 'none';
+    }
+
+    if (popup)    popup.addEventListener('click', openProfile);
+    if (popupMob) popupMob.addEventListener('click', openProfile);
+    if (closeBtn) closeBtn.addEventListener('click', closeProfile);
+
+    document.addEventListener('click', function (e) {
+        if (pro && pro.style.display === 'block') {
+            if (!pro.contains(e.target) && e.target !== popup && e.target !== popupMob) {
+                closeProfile();
+            }
+        }
+    });
+
+    /* ── Active link highlight ────────────────────────── */
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.sidebar .nav-link').forEach(function (link) {
+        try {
+            if (!link.href || link.href.includes('void(0)')) return;
+            const lp = new URL(link.href, window.location.origin).pathname;
+            if (currentPath === lp || (lp !== '/' && currentPath.startsWith(lp))) {
+                link.classList.add('active');
+            }
+        } catch (_) {}
+    });
+})();
+</script>
+
+<script>
+// Global Intersection Observer for Scroll Animations
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    // Observe elements that already exist
+    document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+    
+    // Create a MutationObserver to catch dynamically added elements if needed
+    const mutationObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === 1 && node.classList.contains('fade-in-up')) {
+                    observer.observe(node);
+                } else if (node.nodeType === 1 && node.querySelectorAll) {
+                    node.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+                }
+            });
+        });
+    });
+    
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+});
+</script>

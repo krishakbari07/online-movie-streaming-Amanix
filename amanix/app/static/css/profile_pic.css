@@ -1,0 +1,98 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    background-color: #101010;
+    /* background-color: black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile {
+    height: 20rem; /* Increased height */
+    width: 25rem; /* Increased width */
+    background-color: black;
+    display: flex;
+    border: 1px solid rgba(184, 9, 9, 0.913);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 0 30px 0px rgba(255, 0, 0, 0.7); 
+    padding: 30px; /* Increased padding */
+}
+
+.profile .file-input {
+    margin-bottom: 25px; /* Adjusted margin */
+    text-align: center; /* Center the file input */
+}
+
+.profile #profilePic {
+    font-size: 1rem;
+    color: #fff;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #555;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    width: 100%; /* Ensure the input fits inside the box */
+    max-width: 250px; /* Limit the width */
+}
+
+.profile #profilePic:hover {
+    background-color: #444;
+    border-color: #777;
+}
+
+.profile .btn-upload {
+    background-color: crimson;
+    border: 2px solid crimson;
+    outline: none;
+    width: 130px; /* Increased width */
+    height: 40px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-bottom: 20px; /* Adjusted margin */
+    margin-left: 4rem;
+}
+
+.profile .btn-upload:hover {
+    background-color: darkred;
+    border-color: darkred;
+    font-weight: 500;
+}
+
+.profile .back-link {
+    margin-top: 15px;
+    text-align: center; /* Center the back link */
+}
+
+.profile .back-link a {
+    color: #0071eb;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.profile .back-link a:hover {
+    /* color: crimson; */
+    text-decoration: underline;
+}

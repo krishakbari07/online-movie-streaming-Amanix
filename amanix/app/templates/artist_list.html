@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists - Amanix</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+        .artists-container {
+            max-width: 1400px;
+            margin: 100px auto 50px;
+            padding: 20px;
+        }
+        .page-header {
+            margin-bottom: 40px;
+        }
+        .page-header h1 {
+            color: #e50914;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #e50914;
+            border-color: #e50914;
+        }
+        .artists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+        .artist-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .artist-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+        }
+        .artist-card-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #000;
+        }
+        .artist-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .artist-card:hover .artist-card-image img {
+            transform: scale(1.1);
+        }
+        .artist-card-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .artist-card-info h3 {
+            margin: 0 0 8px 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .artist-category {
+            margin: 5px 0;
+            color: #b3b3b3;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .artist-rating {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 3px;
+            margin-top: 8px;
+        }
+        .rating-value {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .rating-label {
+            color: #b3b3b3;
+            font-size: 12px;
+        }
+        @media (max-width: 1200px) {
+            .artists-container {
+                padding: 20px 15px;
+            }
+            .artists-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 25px;
+            }
+        }
+        @media (max-width: 768px) {
+            .artists-container {
+                margin-top: 80px;
+                padding: 15px;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .filter-section {
+                gap: 10px;
+            }
+            .filter-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .artists-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+            .artist-card-image {
+                height: 200px;
+            }
+        }
+        @media (max-width: 480px) {
+            .artists-container {
+                margin-top: 70px;
+                padding: 10px;
+            }
+            .page-header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            .filter-section {
+                flex-direction: column;
+            }
+            .filter-btn {
+                width: 100%;
+                text-align: center;
+            }
+            .artists-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .artist-card-image {
+                height: 180px;
+            }
+            .artist-card-info h3 {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="artists-container">
+        <div class="page-header">
+            <h1>All Artists</h1>
+            <div class="filter-section">
+                <a href="{% url 'artist_list' %}" class="filter-btn {% if not category_filter %}active{% endif %}">All</a>
+                <a href="{% url 'artist_list' %}?category=actor" class="filter-btn {% if category_filter == 'actor' %}active{% endif %}">Actors</a>
+                <a href="{% url 'artist_list' %}?category=singer" class="filter-btn {% if category_filter == 'singer' %}active{% endif %}">Singers</a>
+                <a href="{% url 'artist_list' %}?category=director" class="filter-btn {% if category_filter == 'director' %}active{% endif %}">Directors</a>
+                <a href="{% url 'artist_list' %}?category=composer" class="filter-btn {% if category_filter == 'composer' %}active{% endif %}">Composers</a>
+            </div>
+        </div>
+
+        {% if artists %}
+        <div class="artists-grid">
+            {% for artist in artists %}
+            <div class="artist-card" onclick="window.location.href='{% url 'artist_detail' artist.artist_id %}'">
+                <div class="artist-card-image">
+                    <img src="{{ artist.artist_photo.url }}" alt="{{ artist.artist_name }}">
+                </div>
+                <div class="artist-card-info">
+                    <h3>{{ artist.artist_name }}</h3>
+                    <p class="artist-category">{{ artist.get_category_display }}</p>
+                    <div class="artist-rating">
+                        <span class="rating-value">{{ artist.popularity_rating }}</span>
+                        <span class="rating-label">/10</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="text-align: center; color: #b3b3b3; margin-top: 50px;">No artists found.</p>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+

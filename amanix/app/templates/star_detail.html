@@ -1,0 +1,370 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ star.star_name }} - Amanix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <style>
+        .star-hero {
+            position: relative;
+            width: 100%;
+            min-height: 600px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .star-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+            z-index: 1;
+        }
+        .star-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .star-photo {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .star-info {
+            flex: 1;
+            color: white;
+        }
+        .star-info h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .star-bio {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #ddd;
+            margin-top: 20px;
+            max-width: 700px;
+        }
+        .star-movies-section {
+            background: #000;
+            padding: 60px 20px;
+            min-height: 400px;
+        }
+        .star-movies-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .star-movies-section h2 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e50914;
+            padding-bottom: 10px;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            padding: 20px 0;
+        }
+        .movie-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(229,9,20,0.3);
+        }
+        .movie-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+        .movie-card-info {
+            padding: 15px;
+            color: white;
+        }
+        .movie-card-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .movie-card-meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .movie-card-description {
+            color: #ccc;
+            font-size: 13px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .no-movies {
+            text-align: center;
+            color: #999;
+            padding: 60px 20px;
+            font-size: 18px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            background: rgba(229,9,20,0.8);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .back-button:hover {
+            background: #e50914;
+        }
+        .search-box-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+        }
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            margin-top: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+        .autocomplete-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        .autocomplete-item:hover {
+            background: #333;
+        }
+        .autocomplete-type {
+            color: #e50914;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            background: rgba(229, 9, 20, 0.2);
+            border-radius: 3px;
+        }
+        .autocomplete-value {
+            flex: 1;
+        }
+        @media (max-width: 1200px) {
+            .star-hero-content {
+                max-width: 100%;
+                padding: 30px 15px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 25px;
+            }
+        }
+        @media (max-width: 768px) {
+            .star-hero {
+                min-height: 500px;
+            }
+            .star-hero-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 30px 15px;
+            }
+            .star-photo {
+                width: 180px;
+                height: 180px;
+            }
+            .star-info h1 {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+            .star-bio {
+                font-size: 14px;
+                margin-top: 15px;
+            }
+            .star-movies-section {
+                padding: 40px 15px;
+            }
+            .star-movies-container {
+                padding: 0;
+            }
+            .star-movies-section h2 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+            }
+            .movie-card img {
+                height: 250px;
+            }
+            .movie-card-info {
+                padding: 12px;
+            }
+            .movie-card-info h3 {
+                font-size: 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .star-hero {
+                min-height: 400px;
+            }
+            .star-photo {
+                width: 150px;
+                height: 150px;
+            }
+            .star-info h1 {
+                font-size: 28px;
+            }
+            .movies-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .movie-card img {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Star Hero Section with Background Photo -->
+    <div class="star-hero" style="{% if star.star_background %}background-image: url('{{ star.star_background.url }}');{% else %}background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);{% endif %}">
+        <div class="star-hero-overlay"></div>
+        <div class="star-hero-content">
+            <img src="{{ star.star_photo.url }}" alt="{{ star.star_name }}" class="star-photo">
+            <div class="star-info">
+                <h1>{{ star.star_name }}</h1>
+                {% if star.star_bio %}
+                    <div class="star-bio">{{ star.star_bio }}</div>
+                {% else %}
+                    <div class="star-bio">Explore all movies starring {{ star.star_name }}.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Star Movies Section -->
+    <div class="star-movies-section">
+        <div class="star-movies-container">
+            <a href="{% url 'index' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <h2>Movies Starring {{ star.star_name }}</h2>
+            
+            {% if movies %}
+                <div class="movies-grid">
+                    {% for movie in movies %}
+                        <div class="movie-card" onclick="window.location.href='{% url 'movie' movie.movie_id %}';">
+                            <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                            <div class="movie-card-info">
+                                <h3>{{ movie.movie_name }}</h3>
+                                <div class="movie-card-meta">
+                                    {{ movie.movie_release_date }} | {{ movie.movie_duration }} | Rating: {{ movie.movie_rating }}
+                                </div>
+                                <div class="movie-card-description">{{ movie.movie_description }}</div>
+                                <div class="movie-card-meta">Director: <span style="color: #e50914;">{{ movie.movie_director }}</span></div>
+                                {% if is_login %}
+                                    {% if has_paid %}
+                                        <a href="{% url 'movie' movie.movie_id %}"><div class="btn-watch" style="margin-top: 10px;"><button>Watch</button></div></a>
+                                    {% else %}
+                                        <a href="{% url 'subscription' %}"><div class="btn-watch" style="margin-top: 10px;"><button>Subscribe to Watch</button></div></a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{% url 'login' %}"><div class="btn-watch" style="margin-top: 10px;"><button>Login to Watch</button></div></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-movies">
+                    <i class="fas fa-film" style="font-size: 48px; margin-bottom: 20px; color: #999;"></i>
+                    <p>No movies found for {{ star.star_name }}.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'search_movies' %}">Search</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/search.js' %}"></script>
+</body>
+</html>
+

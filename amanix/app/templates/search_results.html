@@ -1,0 +1,508 @@
+{% load static %}
+{% load star_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Amanix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <style>
+        :root {
+            --primary: #e50914;
+            --bg-dark: #0a0b10;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #a3abbb;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.05), transparent 50%);
+            font-family: 'Inter', 'Poppins', sans-serif;
+            color: var(--text-main);
+        }
+
+        .search-container {
+            max-width: 1400px;
+            margin: 100px auto 60px;
+            padding: 0 4vw;
+        }
+
+        .search-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 20px 30px;
+            border-radius: 20px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: 15px;
+        }
+
+        .filter-group select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-group select option {
+            background-color: #11131a;
+            color: #ffffff;
+        }
+
+        .filter-group select:hover {
+            border-color: var(--primary);
+        }
+
+        .autocomplete-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .autocomplete-item:hover {
+            background: rgba(229, 9, 20, 0.1);
+        }
+        .autocomplete-type {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.05);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .alphabet-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+        }
+
+        .alphabet-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .alphabet-btn:hover, .alphabet-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .alphabet-btn[data-letter="all"] {
+            width: auto;
+            padding: 0 15px;
+        }
+
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .result-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+        }
+
+        .result-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(229, 9, 20, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .result-img-wrapper {
+            position: relative;
+            height: 330px;
+            overflow: hidden;
+        }
+
+        .result-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .result-card:hover .result-img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .result-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: #ffd166;
+            border: 1px solid rgba(255, 209, 102, 0.3);
+            z-index: 2;
+        }
+
+        .result-content {
+            padding: 25px;
+        }
+
+        .result-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .result-description {
+            font-size: 0.95rem;
+            color: #b0b4c0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .btn-watch {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-watch:hover {
+            background: #f40612;
+            box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Search Container -->
+    <div class="search-container">
+        <div class="search-header">
+            <h1 style="color: white; margin-bottom: 20px;">Search Results</h1>
+            
+            <!-- Search Filters -->
+            <div class="search-filters">
+                <div class="search-input-wrapper" style="flex: 1; position: relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+                    <input type="text" id="searchInput" placeholder="Search movies, actors, directors..." value="{{ query }}" style="width: 100%; padding: 12px 20px 12px 45px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 1rem; box-sizing: border-box;">
+                    <div id="autocompleteDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-dark); border: 1px solid var(--glass-border); border-radius: 10px; margin-top: 5px; z-index: 1000; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Filter By:</label>
+                    <select id="filterType">
+                        <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
+                        <option value="movie" {% if filter_type == 'movie' %}selected{% endif %}>Movie Name</option>
+                        <option value="star" {% if filter_type == 'star' %}selected{% endif %}>Star</option>
+                        <option value="director" {% if filter_type == 'director' %}selected{% endif %}>Director</option>
+                    </select>
+                </div>
+                <button class="search-button" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background 0.3s;" onmouseover="this.style.background='#f40612'" onmouseout="this.style.background='var(--primary)'">Search</button>
+            </div>
+
+            <!-- Alphabet Filter -->
+            <div class="alphabet-filter">
+                <button class="alphabet-btn {% if alphabet == '' or alphabet == 'all' %}active{% endif %}" data-letter="all">All</button>
+                {% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+                    <button class="alphabet-btn {% if alphabet == letter %}active{% endif %}" data-letter="{{ letter }}">{{ letter }}</button>
+                {% endfor %}
+            </div>
+
+            <div class="search-stats">
+                Found {{ movies.count }} result{{ movies.count|pluralize }} 
+                {% if query %}{% if filter_type != 'all' %}for "{{ query }}" in {{ filter_type }}{% else %}for "{{ query }}"{% endif %}{% endif %}
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        {% if movies %}
+            <div class="search-results">
+                {% for movie in movies %}
+                    <div class="result-card">
+                        <div class="result-img-wrapper">
+                            <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                            <div class="result-badge"><i class="fa-solid fa-star"></i> {{ movie.movie_rating }}</div>
+                        </div>
+                        <div class="result-content">
+                            <h3>{{ movie.movie_name }}</h3>
+                            <div class="result-meta">
+                                <span><i class="fa-regular fa-calendar"></i> {{ movie.movie_release_date }}</span>
+                                <span><i class="fa-regular fa-clock"></i> {{ movie.movie_duration }}</span>
+                            </div>
+                            <div class="result-description">{{ movie.movie_description }}</div>
+                            
+                            <div style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">
+                                <div style="margin-bottom: 5px;"><strong>Director:</strong> <span style="color: var(--primary);">{{ movie.movie_director }}</span></div>
+                                <div><strong>Stars:</strong> 
+                                    {% if movie.movie_star|has_star_link:star_objects %}
+                                        <a href="{% url 'star_detail' movie.movie_star|get_star_id:star_objects %}" style="color: var(--primary); text-decoration: none;">{{ movie.movie_star }}</a>
+                                    {% else %}
+                                        <span style="color: var(--primary);">{{ movie.movie_star }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if is_login %}
+                                {% if has_paid %}
+                                    <a href="{% url 'movie' movie.movie_id %}" class="btn-watch">Watch Now</a>
+                                {% else %}
+                                    <a href="{% url 'subscription' %}" class="btn-watch">Subscribe to Watch</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn-watch">Login to Watch</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-results">
+                <i class="fas fa-search" style="font-size: 48px; margin-bottom: 20px; color: #999;"></i>
+                <p>No movies found matching your search criteria.</p>
+                <p style="font-size: 14px; margin-top: 10px;">Try adjusting your filters or search terms.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'search_movies' %}">Search</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const filterType = document.getElementById('filterType');
+        const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+        let autocompleteTimeout;
+
+        // Autocomplete on input
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                clearTimeout(autocompleteTimeout);
+                
+                if (query.length < 2) {
+                    autocompleteDropdown.style.display = 'none';
+                    return;
+                }
+
+                autocompleteTimeout = setTimeout(() => {
+                    fetch(`{% url 'autocomplete_suggestions' %}?q=${encodeURIComponent(query)}&type=${filterType.value}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            displayAutocomplete(data.suggestions);
+                        })
+                        .catch(error => console.error('Error:', error));
+                }, 300);
+            });
+
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    fetch(`{% url 'autocomplete_suggestions' %}?q=${encodeURIComponent(this.value.trim())}&type=${filterType.value}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            displayAutocomplete(data.suggestions);
+                        });
+                }
+            });
+
+            // Submit search on Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                }
+            });
+        }
+
+        function displayAutocomplete(suggestions) {
+            if (!suggestions || suggestions.length === 0) {
+                autocompleteDropdown.style.display = 'none';
+                return;
+            }
+
+            autocompleteDropdown.innerHTML = '';
+            suggestions.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-item';
+                div.innerHTML = `
+                    <span>${item.value}</span>
+                    <span class="autocomplete-type">${item.type}</span>
+                `;
+                div.addEventListener('click', () => {
+                    // If star has a URL (from Star model), navigate directly to star page
+                    if (item.type === 'Star' && item.url && item.id) {
+                        window.location.href = item.url;
+                    } else if (item.url) {
+                        // Use provided URL if available
+                        window.location.href = item.url;
+                    } else {
+                        // Otherwise, perform normal search
+                        searchInput.value = item.value;
+                        autocompleteDropdown.style.display = 'none';
+                        performSearch();
+                    }
+                });
+                autocompleteDropdown.appendChild(div);
+            });
+            autocompleteDropdown.style.display = 'block';
+        }
+
+        // Close autocomplete on outside click
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+                autocompleteDropdown.style.display = 'none';
+            }
+        });
+
+        // Filter type change
+        if (filterType) {
+            filterType.addEventListener('change', function() {
+                performSearch();
+            });
+        }
+
+        // Alphabet filter
+        document.querySelectorAll('.alphabet-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.alphabet-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const letter = this.dataset.letter;
+                performSearch(letter);
+            });
+        });
+
+        function performSearch(letter = null) {
+            const query = searchInput ? searchInput.value.trim() : '';
+            const filter = filterType ? filterType.value : 'all';
+            const alphabet = letter !== null ? letter : (document.querySelector('.alphabet-btn.active')?.dataset.letter || 'all');
+            
+            let url = `{% url 'search_movies' %}?filter=${filter}&alphabet=${alphabet}`;
+            if (query) {
+                url += `&q=${encodeURIComponent(query)}`;
+            }
+            window.location.href = url;
+        }
+
+        // Search button (if exists)
+        const searchButton = document.querySelector('.search-button');
+        if (searchButton) {
+            searchButton.addEventListener('click', performSearch);
+        }
+    </script>
+</body>
+</html>
+

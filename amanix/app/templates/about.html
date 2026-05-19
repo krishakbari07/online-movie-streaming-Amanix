@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>About Us - Amanix</title>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <section class="info" style="margin-top: 120px;">
+        <div class="hero-header" style="margin-bottom: 50px;">
+            <div class="hero-header-logo">
+                <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo">
+            </div>
+            <div class="hero-header-text">
+                <div style="color: #e50914; font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Amanix Corporation</div>
+                <h1>About <span>Us</span></h1>
+                <p>Welcome to Amanix – Your Ultimate Movie Streaming Destination! We are dedicated to delivering a seamless, high-quality streaming experience.</p>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <i class="fas fa-film feature-icon"></i>
+                <h3>Vast Library</h3>
+                <p>Thousands of movies and TV shows across various genres, carefully curated for you.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-tv feature-icon"></i>
+                <h3>HD Streaming</h3>
+                <p>Enjoy content in breathtaking high-definition with minimal buffering and top-tier audio.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-laptop-house feature-icon"></i>
+                <h3>Multi-Device</h3>
+                <p>Watch seamlessly on your TV, laptop, tablet, or mobile device anywhere, anytime.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-ban feature-icon"></i>
+                <h3>Ad-Free Experience</h3>
+                <p>Upgrade to our premium plans and enjoy zero interruptions while watching your favorites.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 80px;">
+            <h2>Meet The Developer</h2>
+            <p style="color: var(--text-muted);">The visionaries behind the Amanix streaming platform architecture.</p>
+            
+            <div class="dev-grid">
+                <div class="dev-card">
+                    <div class="dev-avatar">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3>Krish Akbari</h3>
+                    <p>CEO & Lead Developer Of Amanix Corporation</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/krishakbari__001" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/krish-akbari-576571323/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/krishakbari07" target="_blank"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {% include 'footer.html' %}
+</body>
+</html>

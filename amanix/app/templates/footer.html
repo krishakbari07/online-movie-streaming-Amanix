@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Footer - Eros Now Clone</title>
+</head>
+<body>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo" style="height: 40px; width: auto; opacity: 0.9;">
+                <p>Experience cinematic excellence with Amanix. Stream unlimited premium content anytime, anywhere.</p>
+            </div>
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="{% url 'movies_list' %}">Movies</a></li>
+                    <li><a href="{% url 'subscription' %}">Subscription</a></li>
+                </ul>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="footer-section">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'terms' %}">Terms of Use</a></li>
+                    <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/krishakbari__001" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/krish-akbari-576571323/" aria-label="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/krishakbari07" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 Amanix. All rights reserved. | <a href="{% url 'privacy_policy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms of Use</a></p>
+        </div>
+    </footer>
+</body>
+</html>

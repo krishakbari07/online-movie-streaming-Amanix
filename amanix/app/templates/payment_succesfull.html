@@ -1,0 +1,231 @@
+{% comment %} {%load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Successful</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .success-container {
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .checkmark-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #2196f3; /* Blue color */
+        margin: 0 auto 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: scaleIn 0.5s ease-in-out;
+      }
+
+      .checkmark {
+        width: 50px;
+        height: 25px;
+        border-left: 5px solid white;
+        border-bottom: 5px solid white;
+        transform: rotate(-45deg);
+        animation: drawCheckmark 0.5s ease-in-out;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .home-button {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .home-button:hover {
+        background-color: #1976d2;
+      }
+
+      @keyframes scaleIn {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes drawCheckmark {
+        0% {
+          width: 0;
+          height: 0;
+        }
+        100% {
+          width: 50px;
+          height: 25px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="success-container">
+      <div class="checkmark-circle">
+        <div class="checkmark"></div>
+      </div>
+      <h1>Payment Successful!</h1>
+      <p>
+        Thank you for your purchase. Your payment has been processed
+        successfully.
+      </p>
+      <a href="{% url 'index' %}" class="home-button">Return to Home</a>
+    </div>
+    <h2>Subscription Successful!</h2>
+    <p>Customer Name: {{ subscription.customer.name }}</p>
+    <p>Email: {{ subscription.customer.email }}</p>
+    <p>Subscription ID: {{ subscription.id }}</p>
+    <p>Plan: {{ subscription.plan.name }}</p>
+    <p>Amount Paid: ₹{{ subscription.plan.price }}</p>
+    <p>Valid Till: {{ subscription.end_date }}</p>
+    <a href="{% url 'download_receipt' subscription.id %}">Download Receipt</a>
+  </body>
+</html> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <title>Payment Successful</title>
+    <style>
+        body{
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .receipt-card{
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #1f2833;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .receipt-card h1{
+            margin-bottom: 8px;
+            font-size: 28px;
+            color: #66fcf1;
+        }
+        .receipt-card p.subtitle{
+            margin-top: 0;
+            color: #c5c6c7;
+            font-size: 15px;
+        }
+        .details{
+            margin: 24px 0;
+            text-align: left;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .details span{
+            color: #c5c6c7;
+            display: block;
+        }
+        .details strong{
+            color: #fff;
+        }
+        .actions{
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .actions a{
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .btn-primary{
+            background: #45a29e;
+            color: #0b0c10;
+        }
+        .btn-primary:hover{
+            background: #66fcf1;
+        }
+        .btn-secondary{
+            border: 1px solid #c5c6c7;
+            color: #c5c6c7;
+        }
+        .btn-secondary:hover{
+            background: rgba(255,255,255,0.1);
+        }
+        .error{
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-card">
+        {% if payment %}
+            <h1>Payment Successful!</h1>
+            <p class="subtitle">Your subscription is now active.</p>
+            <div class="details">
+                <span><strong>Customer:</strong> {{ payment.user.nm }}</span>
+                <span><strong>Email:</strong> {{ payment.user.email }}</span>
+                <span><strong>Plan:</strong> {{ payment.subscription.sub_name }}</span>
+                <span><strong>Amount Paid:</strong> ₹{{ payment.sub_price }}</span>
+                <span><strong>Transaction ID:</strong> {{ payment.transaction_id }}</span>
+                <span><strong>Start Date:</strong> {{ payment.start_date }}</span>
+                <span><strong>Valid Till:</strong> {{ payment.end_date }}</span>
+            </div>
+            <div class="actions">
+                <a class="btn-primary" href="{% url 'download_receipt' payment.pay_id %}">Download PDF Receipt</a>
+                <a class="btn-secondary" href="{% url 'index' %}">Go to Home</a>
+            </div>
+        {% else %}
+            <p class="error">{{ error_message|default:"No payment found for this request." }}</p>
+            <div class="actions">
+                <a class="btn-secondary" href="{% url 'subscription' %}">View Plans</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

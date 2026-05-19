@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <h1>{{ title }}</h1>
+    <p>Are you sure you want to {{ action_name }} the selected users?</p>
+    
+    <div>
+        <label for="reason">Reason (will be sent via email):</label><br>
+        <textarea name="reason" id="reason" rows="5" cols="50" required></textarea>
+    </div>
+    
+    {% for obj in queryset %}
+    <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
+    {% endfor %}
+    
+    <input type="hidden" name="action" value="{{ action_value }}" />
+    <input type="hidden" name="apply" value="1" />
+    
+    <div class="submit-row">
+        <input type="submit" value="Confirm and Send Email" />
+    </div>
+</form>
+{% endblock %}

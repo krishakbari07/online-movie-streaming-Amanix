@@ -1,0 +1,56 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>LOGIN</title>
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="logo">
+        <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo">
+    </div>
+
+    <div class="container-log">
+        <form method="post">
+            {% csrf_token %}
+            <h2>Login</h2>
+
+            <div class="row">
+                <label>Email Address</label>
+                <input type="email" name="unm" class="ip" placeholder="name@example.com" required>
+                <div class="ip-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Password</label>
+                <input type="password" class="ip" name="pass" placeholder="••••••••" required>
+                <div class="ip-icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+
+            <button type="submit" name="log_btn" class="btn">Sign In</button>
+
+            <div class="auth-switch">
+                <p>New to Amanix?</p>
+                <a href="{% url 'register' %}" class="btn-secondary">Create account</a>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>

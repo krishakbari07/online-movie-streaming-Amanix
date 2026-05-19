@@ -1,0 +1,56 @@
+{% load static  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>REGISTER</title>
+</head>
+<body>
+    <div class="logo">
+        <img src="{% static 'images/logo/LOGO3.png' %}" alt="Amanix Logo">
+    </div>
+
+    <div class="container-reg">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Create Account</h2>
+
+            <div class="row">
+                <label>Full Name</label>
+                <input type="text" name="nm" class="ip" placeholder="Your Name" required>
+                <div class="ip-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Email Address</label>
+                <input type="email" class="ip" name="mail" placeholder="name@example.com" required>
+                <div class="ip-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+            </div>
+
+            <div class="row">
+                <label>Password</label>
+                <input type="password" class="ip" name="pass" placeholder="••••••••" required>
+                <div class="ip-icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+            </div>
+
+            <button type="submit" name="reg_btn" class="btn">Register</button>
+
+            <div class="auth-switch">
+                <p>Already have an account?</p>
+                <a href="{% url 'login' %}" class="btn-secondary">Login here</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

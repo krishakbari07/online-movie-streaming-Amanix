@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <title>Movie Subscription Plans</title>
+    <style>
+        :root {
+            --primary: #e50914;
+            --gold: #ffd166;
+            --bg-dark: #0a0b10;
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border-glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(229, 9, 20, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(255, 209, 102, 0.1), transparent 40%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 4vw;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(90deg, #fff 0%, #a3abbb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+        }
+
+        .plan {
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan:hover {
+            transform: translateY(-15px);
+            border-color: rgba(229, 9, 20, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .plan::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .plan:hover::before { opacity: 1; }
+
+        .plan h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .plan .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 20px 0;
+            letter-spacing: -1px;
+        }
+
+        .plan .price span {
+            font-size: 1rem;
+            color: #8c8c8c;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        .plan ul {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0 40px;
+            padding: 0;
+            flex: 1;
+        }
+
+        .plan ul li {
+            font-size: 0.95rem;
+            color: #b0b4c0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .plan ul li i {
+            color: #46d369;
+            font-size: 1.1rem;
+        }
+
+        .plan ul li.cross i {
+            color: #8c8c8c;
+            opacity: 0.5;
+        }
+
+        .plan .btn-select {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .plan:hover .btn-select {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .footer {
+            padding: 40px 0;
+            text-align: center;
+            color: #8f98a9;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .plan { animation: fadeInUp 0.6s ease backwards; }
+        .plan:nth-child(2) { animation-delay: 0.15s; }
+        .plan:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        <h1>Choose the plan that's right for you</h1>
+        <div class="plans">
+            {% for sub in subs %}
+            <!-- Subscription Plan -->
+            <div class="plan">
+                <h2>{{ sub.sub_name }}</h2>
+                <p style="color: #8c8c8c;">Premium cinematic experience</p>
+                <div class="price">₹{{ sub.sub_price }} <span>/{{ sub.sub_time_limit }}</span></div>
+                <ul>
+                    <li><i class="fa-solid fa-circle-check"></i> Full HD (1080p) streaming</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Multiple device support</li>
+                    <li><i class="fa-solid fa-circle-check"></i> 100% Ad-free experience</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Global content access</li>
+                    <li class="cross"><i class="fa-solid fa-circle-xmark"></i> Offline viewing (Coming Soon)</li>
+                </ul>
+                <a href="{% url 'payment' sub.sub_id %}" class="btn-select">Select Plan</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="footer">
+            <p>HD (720p), Full HD (1080p), Ultra HD (4K), and HDR availability subject to your internet service and device capabilities. <a href="{% url 'learn_more_subcription' %}">Learn more</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

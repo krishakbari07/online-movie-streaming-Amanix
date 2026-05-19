@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ language.language_name }} Movies - Amanix</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+        }
+        .language-page-container {
+            max-width: 1400px;
+            margin: 100px auto 50px;
+            padding: 20px;
+        }
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .page-header h1 {
+            color: #e50914;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .page-header .language-subtitle {
+            color: #b3b3b3;
+            font-size: 1.2rem;
+        }
+        .languages-nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+        .language-nav-chip {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .language-nav-chip:hover {
+            background: rgba(229, 9, 20, 0.3);
+            border-color: #e50914;
+        }
+        .language-nav-chip.active {
+            background: #e50914;
+            border-color: #e50914;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+        }
+        .movie-card-image {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #000;
+        }
+        .movie-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .movie-card:hover .movie-card-image img {
+            transform: scale(1.1);
+        }
+        .movie-card-info {
+            padding: 15px;
+        }
+        .movie-card-info h3 {
+            margin: 0 0 8px 0;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .movie-card-meta {
+            color: #b3b3b3;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        .movie-card-genre {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            border-radius: 12px;
+            color: #e50914;
+            font-size: 11px;
+            margin: 5px 5px 5px 0;
+        }
+        .movie-card-rating {
+            color: #ffd700;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .no-movies {
+            text-align: center;
+            color: #b3b3b3;
+            padding: 60px 20px;
+            font-size: 18px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 1200px) {
+            .language-page-container {
+                padding: 20px 15px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 25px;
+            }
+        }
+        @media (max-width: 768px) {
+            .language-page-container {
+                margin-top: 80px;
+                padding: 15px;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .languages-nav {
+                gap: 10px;
+                padding: 15px;
+            }
+            .language-nav-chip {
+                padding: 8px 15px;
+                font-size: 13px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
+            }
+            .movie-card-image {
+                height: 220px;
+            }
+        }
+        @media (max-width: 480px) {
+            .language-page-container {
+                margin-top: 70px;
+                padding: 10px;
+            }
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .movie-card-image {
+                height: 200px;
+            }
+            .movie-card-info h3 {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="language-page-container">
+        <a href="{% url 'index' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="page-header">
+            <h1>{{ language.language_name }} Movies</h1>
+            <p class="language-subtitle">Explore our collection of {{ language.language_name }} movies</p>
+        </div>
+
+        {% if languages %}
+        <div class="languages-nav">
+            {% for lang in languages %}
+            <a href="{% url 'language_movies' lang.language_id %}" 
+               class="language-nav-chip {% if lang.language_id == language.language_id %}active{% endif %}">
+                {{ lang.language_name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if movies %}
+        <div class="movies-grid">
+            {% for movie in movies %}
+            <div class="movie-card" onclick="window.location.href='{% url 'movie' movie.movie_id %}';">
+                <div class="movie-card-image">
+                    <img src="{{ movie.movie_image.url }}" alt="{{ movie.movie_name }}">
+                </div>
+                <div class="movie-card-info">
+                    <h3>{{ movie.movie_name }}</h3>
+                    {% if movie.category %}
+                    <span class="movie-card-genre">{{ movie.category.cat_name }}</span>
+                    {% endif %}
+                    {% if movie.avg_rating %}
+                    <div class="movie-card-rating">
+                        ⭐ {{ movie.avg_rating|floatformat:1 }}/5.0
+                    </div>
+                    {% elif movie.movie_rating %}
+                    <div class="movie-card-rating">
+                        Rating: {{ movie.movie_rating }}
+                    </div>
+                    {% endif %}
+                    <div class="movie-card-meta">
+                        {{ movie.movie_release_date }} | {{ movie.movie_duration }}
+                    </div>
+                    <div class="movie-card-meta">
+                        Director: <span style="color: #e50914;">{{ movie.movie_director }}</span>
+                    </div>
+                    {% if is_login %}
+                        {% if has_paid %}
+                            <a href="{% url 'movie' movie.movie_id %}">
+                                <div class="btn-watch" style="margin-top: 10px;">
+                                    <button>Watch</button>
+                                </div>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'subscription' %}">
+                                <div class="btn-watch" style="margin-top: 10px;">
+                                    <button>Subscribe to Watch</button>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}">
+                            <div class="btn-watch" style="margin-top: 10px;">
+                                <button>Login to Watch</button>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-movies">
+            <i class="fas fa-film" style="font-size: 48px; margin-bottom: 20px; color: #999;"></i>
+            <p>No movies found in {{ language.language_name }}.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <img src="{% static 'images/logo/LOGO3.png' %}">
+                <p>Stream your favorite movies and shows anytime, anywhere.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Amanix. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
